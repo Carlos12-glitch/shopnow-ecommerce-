@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi Perfil — ShopNow</title>
+  <link rel="stylesheet" href="profile.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="logo">Shop<span>Now</span></a>
+      <nav class="nav-links">
+        <a href="index.html">Inicio</a>
+        <a href="index.html#productos">Productos</a>
+        <a href="index.html#ofertas">Ofertas</a>
+      </nav>
+      <div class="nav-actions">
+        <div class="nav-user">
+          <button class="nav-user-btn" onclick="toggleUserMenu()" id="navUserBtn">
+            <span class="nav-avatar" id="navAvatar">U</span>
+            <span id="navUserName">Usuario</span>
+            <i class="fa-solid fa-chevron-down nav-chevron"></i>
+          </button>
+          <div class="nav-user-dropdown" id="navUserDropdown">
+            <div class="nav-user-info">
+              <p class="nav-user-fullname" id="navFullName">—</p>
+              <p class="nav-user-email" id="navUserEmail">—</p>
+            </div>
+            <div class="nav-dropdown-divider"></div>
+            <a href="profile.html" class="nav-dropdown-item active-item">
+              <i class="fa-solid fa-user"></i> Mi Perfil
+            </a>
+            <div class="nav-dropdown-divider"></div>
+            <button class="nav-dropdown-item nav-logout" onclick="logoutProfile()">
+              <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="profile-hero">
+    <div class="ph-orb ph-orb-1"></div>
+    <div class="ph-orb ph-orb-2"></div>
+    <div class="container">
+      <div class="profile-header">
+        <div class="profile-avatar-wrap">
+          <div class="profile-avatar" id="profileAvatar">U</div>
+        </div>
+        <div class="profile-meta">
+          <h1 id="profileName">Cargando...</h1>
+          <p><i class="fa-solid fa-envelope"></i> <span id="profileEmail">—</span></p>
+          <p><i class="fa-solid fa-calendar-days"></i> <span id="profileSince">Miembro desde 2026</span></p>
+        </div>
+        <div class="profile-stats">
+          <div class="pstat"><strong id="pstatOrders">0</strong><span>Pedidos</span></div>
+          <div class="pstat"><strong id="pstatWish">0</strong><span>Favoritos</span></div>
+          <div class="pstat pstat-points"><strong id="pstatPoints">0</strong><span>⭐ Puntos</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TABS -->
+  <div class="profile-tabs-wrap">
+    <div class="container">
+      <div class="profile-tabs" id="profileTabs">
+        <button class="p-tab active" onclick="switchTab('info')" data-tab="info">
+          <i class="fa-solid fa-user"></i> Información
+        </button>
+        <button class="p-tab" onclick="switchTab('seguridad')" data-tab="seguridad">
+          <i class="fa-solid fa-lock"></i> Seguridad
+        </button>
+        <button class="p-tab" onclick="switchTab('pedidos')" data-tab="pedidos">
+          <i class="fa-solid fa-bag-shopping"></i> Pedidos
+          <span class="tab-badge" id="ordersBadge" style="display:none">0</span>
+        </button>
+        <button class="p-tab" onclick="switchTab('favoritos')" data-tab="favoritos">
+          <i class="fa-solid fa-heart"></i> Favoritos
+          <span class="tab-badge" id="wishBadge" style="display:none">0</span>
+        </button>
+        <button class="p-tab" onclick="switchTab('direcciones')" data-tab="direcciones">
+          <i class="fa-solid fa-location-dot"></i> Direcciones
+        </button>
+        <button class="p-tab" onclick="switchTab('devoluciones')" data-tab="devoluciones">
+          <i class="fa-solid fa-rotate-left"></i> Devoluciones
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <main class="profile-main">
+    <div class="container">
+
+      <!-- INFO PERSONAL -->
+      <section class="p-panel active" id="panel-info">
+        <div class="panel-card">
+          <h2 class="panel-title"><i class="fa-solid fa-user"></i> Información Personal</h2>
+          <div class="p-alert" id="infoAlert"></div>
+          <form id="infoForm" onsubmit="saveInfo(event)" novalidate>
+            <div class="p-row">
+              <div class="p-field">
+                <label>Nombre</label>
+                <input type="text" id="pNombre" placeholder="Tu nombre" />
+              </div>
+              <div class="p-field">
+                <label>Apellido</label>
+                <input type="text" id="pApellido" placeholder="Tu apellido" />
+              </div>
+            </div>
+            <div class="p-field">
+              <label>Correo electrónico</label>
+              <input type="email" id="pCorreo" placeholder="Tu correo" />
+            </div>
+            <div class="p-field">
+              <label>Teléfono <small>(opcional)</small></label>
+              <input type="tel" id="pTelefono" placeholder="+52 222 123 4567" />
+            </div>
+            <button type="submit" class="btn-save">
+              <i class="fa-solid fa-floppy-disk"></i> Guardar Cambios
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- SEGURIDAD -->
+      <section class="p-panel" id="panel-seguridad">
+        <div class="panel-card">
+          <h2 class="panel-title"><i class="fa-solid fa-lock"></i> Cambiar Contraseña</h2>
+          <div class="p-alert" id="pwAlert"></div>
+          <form id="pwForm" onsubmit="changePassword(event)" novalidate>
+            <div class="p-field">
+              <label>Contraseña actual</label>
+              <div class="p-pw-wrap">
+                <input type="password" id="pwCurrent" placeholder="Tu contraseña actual" />
+                <button type="button" class="p-toggle-pw" onclick="togglePwField('pwCurrent', this)">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+            </div>
+            <div class="p-field">
+              <label>Nueva contraseña</label>
+              <div class="p-pw-wrap">
+                <input type="password" id="pwNew" placeholder="Mínimo 8 caracteres"
+                  oninput="profileCheckStrength(this.value)" />
+                <button type="button" class="p-toggle-pw" onclick="togglePwField('pwNew', this)">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+              <div class="pw-bar-wrap" id="profilePwStrength" style="display:none">
+                <div class="pw-bar-bg"><div class="pw-bar-fill" id="profilePwFill"></div></div>
+                <span class="pw-bar-label" id="profilePwLabel"></span>
+              </div>
+            </div>
+            <div class="p-field">
+              <label>Confirmar nueva contraseña</label>
+              <div class="p-pw-wrap">
+                <input type="password" id="pwConfirm" placeholder="Repite la nueva contraseña" />
+                <button type="button" class="p-toggle-pw" onclick="togglePwField('pwConfirm', this)">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+            </div>
+            <button type="submit" class="btn-save">
+              <i class="fa-solid fa-key"></i> Cambiar Contraseña
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- PEDIDOS -->
+      <section class="p-panel" id="panel-pedidos">
+        <div class="panel-card">
+          <h2 class="panel-title"><i class="fa-solid fa-bag-shopping"></i> Historial de Pedidos</h2>
+          <div id="ordersList"></div>
+        </div>
+      </section>
+
+      <!-- FAVORITOS -->
+      <section class="p-panel" id="panel-favoritos">
+        <div class="panel-card">
+          <h2 class="panel-title"><i class="fa-solid fa-heart"></i> Mis Favoritos</h2>
+          <div id="wishlistGrid" class="wishlist-grid"></div>
+        </div>
+      </section>
+
+      <!-- DIRECCIONES -->
+      <section class="p-panel" id="panel-direcciones">
+        <div class="panel-card">
+          <div class="panel-header-row">
+            <h2 class="panel-title"><i class="fa-solid fa-location-dot"></i> Mis Direcciones</h2>
+            <button class="btn-add-addr" onclick="openAddressModal()">
+              <i class="fa-solid fa-plus"></i> Nueva dirección
+            </button>
+          </div>
+          <div id="addressesList"></div>
+        </div>
+      </section>
+
+      <!-- DEVOLUCIONES -->
+      <section class="p-panel" id="panel-devoluciones">
+        <div class="panel-card">
+          <h2 class="panel-title"><i class="fa-solid fa-rotate-left"></i> Mis Devoluciones</h2>
+          <div id="devolucionesListProfile"></div>
+          <div class="dev-new-section">
+            <h3><i class="fa-solid fa-plus-circle"></i> Solicitar devolución</h3>
+            <p>Ingresa el ID de tu pedido y el motivo.</p>
+            <form id="devForm" onsubmit="submitDevolucion(event)" novalidate>
+              <div class="p-field">
+                <label>ID de Pedido</label>
+                <input type="text" id="devPedidoId" placeholder="Ej: SN-abc123" />
+              </div>
+              <div class="p-field">
+                <label>Motivo</label>
+                <textarea id="devMotivo" rows="3" placeholder="Describe el problema..."></textarea>
+              </div>
+              <button type="submit" class="btn-save">
+                <i class="fa-solid fa-paper-plane"></i> Enviar solicitud
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <div class="p-toast" id="profileToast"></div>
+
+  <!-- ADDRESS MODAL -->
+  <div class="tracking-overlay" id="addrModalOverlay" onclick="closeAddressModal()"></div>
+  <div class="tracking-modal addr-modal" id="addrModal">
+    <button class="tracking-close" onclick="closeAddressModal()"><i class="fa-solid fa-xmark"></i></button>
+    <h3 class="tracking-title" id="addrModalTitle"><i class="fa-solid fa-location-dot"></i> Nueva dirección</h3>
+    <input type="hidden" id="addressEditId" />
+    <div class="p-row">
+      <div class="p-field">
+        <label>Alias (ej: Casa, Trabajo)</label>
+        <input type="text" id="addrAlias" placeholder="Casa" />
+      </div>
+      <div class="p-field">
+        <label>Nombre del destinatario</label>
+        <input type="text" id="addrNombre" placeholder="Nombre completo" />
+      </div>
+    </div>
+    <div class="p-field">
+      <label>Calle y número</label>
+      <input type="text" id="addrCalle" placeholder="Av. Insurgentes 123" />
+    </div>
+    <div class="p-row">
+      <div class="p-field">
+        <label>Colonia</label>
+        <input type="text" id="addrColonia" placeholder="Col. Centro" />
+      </div>
+      <div class="p-field">
+        <label>CP</label>
+        <input type="text" id="addrCP" placeholder="06600" maxlength="5" />
+      </div>
+    </div>
+    <div class="p-row">
+      <div class="p-field">
+        <label>Ciudad</label>
+        <input type="text" id="addrCiudad" placeholder="Ciudad de México" />
+      </div>
+      <div class="p-field">
+        <label>Estado</label>
+        <input type="text" id="addrEstado" placeholder="CDMX" />
+      </div>
+    </div>
+    <div class="p-field">
+      <label>Teléfono <small>(opcional)</small></label>
+      <input type="tel" id="addrTel" placeholder="+52 555 123 4567" />
+    </div>
+    <div class="p-field addr-principal-check">
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+        <input type="checkbox" id="addrPrincipal" />
+        Establecer como dirección principal
+      </label>
+    </div>
+    <button class="btn-save" onclick="saveAddress()">
+      <i class="fa-solid fa-floppy-disk"></i> Guardar dirección
+    </button>
+  </div>
+
+  <!-- TRACKING MODAL -->
+  <div class="tracking-overlay" id="trackingOverlay" onclick="closeTracking()"></div>
+  <div class="tracking-modal" id="trackingModal">
+    <button class="tracking-close" onclick="closeTracking()"><i class="fa-solid fa-xmark"></i></button>
+    <h3 class="tracking-title"><i class="fa-solid fa-truck"></i> Seguimiento de Pedido</h3>
+    <p class="tracking-order-id" id="trackingOrderId"></p>
+    <div class="tracking-timeline">
+      <div class="tracking-step done" id="tstep-1">
+        <div class="ts-icon"><i class="fa-solid fa-receipt"></i></div>
+        <div class="ts-info"><p class="ts-label">Pedido recibido</p><p class="ts-date" id="tsdate-1"></p></div>
+      </div>
+      <div class="tracking-step done" id="tstep-2">
+        <div class="ts-icon"><i class="fa-solid fa-circle-check"></i></div>
+        <div class="ts-info"><p class="ts-label">Pago confirmado</p><p class="ts-date" id="tsdate-2"></p></div>
+      </div>
+      <div class="tracking-step done" id="tstep-3">
+        <div class="ts-icon"><i class="fa-solid fa-box"></i></div>
+        <div class="ts-info"><p class="ts-label">Preparando tu pedido</p><p class="ts-date" id="tsdate-3"></p></div>
+      </div>
+      <div class="tracking-step done" id="tstep-4">
+        <div class="ts-icon"><i class="fa-solid fa-truck"></i></div>
+        <div class="ts-info"><p class="ts-label">En camino</p><p class="ts-date" id="tsdate-4"></p></div>
+      </div>
+      <div class="tracking-step done" id="tstep-5">
+        <div class="ts-icon"><i class="fa-solid fa-house"></i></div>
+        <div class="ts-info"><p class="ts-label">Entregado</p><p class="ts-date" id="tsdate-5"></p></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="auth.js"></script>
+  <script src="profile.js"></script>
+</body>
+</html>

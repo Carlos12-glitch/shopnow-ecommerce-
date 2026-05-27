@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel Admin — ShopNow</title>
+  <link rel="stylesheet" href="admin.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+
+  <!-- AUTH OVERLAY -->
+  <div class="admin-auth-overlay" id="adminAuthOverlay">
+    <div class="admin-auth-card">
+      <div class="auth-logo">Shop<span>Now</span> <span class="admin-tag">Admin</span></div>
+      <p class="auth-desc">Ingresa el código de acceso para continuar</p>
+      <form onsubmit="checkAdminAuth(event)" novalidate>
+        <div class="auth-input-wrap">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" id="adminPin" placeholder="Código de acceso" />
+        </div>
+        <button type="submit" class="auth-submit-btn">
+          <i class="fa-solid fa-right-to-bracket"></i> Entrar
+        </button>
+      </form>
+      <p class="auth-error" id="adminAuthError"></p>
+      <a href="index.html" class="auth-back">← Volver a la tienda</a>
+    </div>
+  </div>
+
+  <!-- NAVBAR -->
+  <header class="admin-navbar" id="adminNavbar" style="display:none">
+    <a href="index.html" class="admin-logo">Shop<span>Now</span> <span class="admin-tag">Admin</span></a>
+    <div class="admin-nav-right">
+      <a href="index.html" class="admin-view-store">
+        <i class="fa-solid fa-store"></i> Ver tienda
+      </a>
+      <button class="admin-logout-btn" onclick="adminLogout()">
+        <i class="fa-solid fa-right-from-bracket"></i> Salir
+      </button>
+    </div>
+  </header>
+
+  <!-- STATS BAR -->
+  <div class="admin-stats-bar" id="adminStatsBar" style="display:none">
+    <div class="astat">
+      <div class="astat-icon" style="background:rgba(232,82,10,0.12);color:#e8520a">
+        <i class="fa-solid fa-box-open"></i>
+      </div>
+      <div>
+        <strong id="statProducts">12</strong>
+        <span>Productos</span>
+      </div>
+    </div>
+    <div class="astat">
+      <div class="astat-icon" style="background:rgba(67,160,71,0.12);color:#43a047">
+        <i class="fa-solid fa-receipt"></i>
+      </div>
+      <div>
+        <strong id="statOrders">0</strong>
+        <span>Pedidos</span>
+      </div>
+    </div>
+    <div class="astat">
+      <div class="astat-icon" style="background:rgba(30,58,95,0.12);color:#1e3a5f">
+        <i class="fa-solid fa-users"></i>
+      </div>
+      <div>
+        <strong id="statUsers">0</strong>
+        <span>Usuarios</span>
+      </div>
+    </div>
+    <div class="astat">
+      <div class="astat-icon" style="background:rgba(245,184,0,0.15);color:#c49a00">
+        <i class="fa-solid fa-sack-dollar"></i>
+      </div>
+      <div>
+        <strong id="statRevenue">$0</strong>
+        <span>Ingresos totales</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="admin-tabs-wrap" id="adminTabsWrap" style="display:none">
+    <div class="admin-tabs">
+      <button class="admin-tab active" onclick="switchAdminTab('productos')" data-tab="productos">
+        <i class="fa-solid fa-box"></i> Productos
+      </button>
+      <button class="admin-tab" onclick="switchAdminTab('pedidos')" data-tab="pedidos">
+        <i class="fa-solid fa-receipt"></i> Pedidos
+      </button>
+      <button class="admin-tab" onclick="switchAdminTab('usuarios')" data-tab="usuarios">
+        <i class="fa-solid fa-users"></i> Usuarios
+      </button>
+      <button class="admin-tab" onclick="switchAdminTab('analytics')" data-tab="analytics">
+        <i class="fa-solid fa-chart-line"></i> Analytics
+      </button>
+      <button class="admin-tab" onclick="switchAdminTab('cupones')" data-tab="cupones">
+        <i class="fa-solid fa-ticket"></i> Cupones
+      </button>
+      <button class="admin-tab" onclick="switchAdminTab('resenas')" data-tab="resenas">
+        <i class="fa-solid fa-star"></i> Reseñas
+      </button>
+      <button class="admin-tab" onclick="switchAdminTab('devoluciones')" data-tab="devoluciones">
+        <i class="fa-solid fa-rotate-left"></i> Devoluciones
+      </button>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <main class="admin-main" id="adminMain" style="display:none">
+
+    <!-- PRODUCTOS -->
+    <section class="admin-panel active" id="admin-panel-productos">
+      <div class="admin-panel-header">
+        <div>
+          <h2>Gestión de Productos</h2>
+          <p class="panel-subtitle" id="productsCount">12 productos en catálogo</p>
+        </div>
+      </div>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Producto</th>
+              <th>Categoría</th>
+              <th>Precio</th>
+              <th>Stock</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="productsTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- PEDIDOS -->
+    <section class="admin-panel" id="admin-panel-pedidos">
+      <div class="admin-panel-header">
+        <div>
+          <h2>Historial de Pedidos</h2>
+          <p class="panel-subtitle" id="ordersCount">0 pedidos registrados</p>
+        </div>
+      </div>
+      <div id="adminOrdersList">
+        <div class="admin-empty">
+          <i class="fa-solid fa-receipt"></i>
+          <p>No hay pedidos registrados aún.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- USUARIOS -->
+    <section class="admin-panel" id="admin-panel-usuarios">
+      <div class="admin-panel-header">
+        <div>
+          <h2>Usuarios Registrados</h2>
+          <p class="panel-subtitle" id="usersCount">0 usuarios</p>
+        </div>
+      </div>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Nombre completo</th>
+              <th>Correo</th>
+              <th>Pedidos</th>
+              <th>Puntos</th>
+            </tr>
+          </thead>
+          <tbody id="usersTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ANALYTICS -->
+    <section class="admin-panel" id="admin-panel-analytics">
+      <div class="admin-panel-header">
+        <div><h2>Analytics</h2><p class="panel-subtitle">Últimos 30 días</p></div>
+        <button class="admin-refresh-btn" onclick="loadAnalytics()"><i class="fa-solid fa-rotate-right"></i> Actualizar</button>
+      </div>
+      <div class="analytics-grid">
+        <div class="analytics-card">
+          <h4>Ventas por día</h4>
+          <canvas id="chartVentas" height="200"></canvas>
+        </div>
+        <div class="analytics-card">
+          <h4>Pedidos por estado</h4>
+          <canvas id="chartEstados" height="200"></canvas>
+        </div>
+        <div class="analytics-card analytics-card-full">
+          <h4>Top 5 productos más vendidos</h4>
+          <div id="topProductosList"><p class="admin-empty-small">Cargando...</p></div>
+        </div>
+        <div class="analytics-card analytics-card-full">
+          <h4>Últimos pedidos</h4>
+          <div id="ultimosPedidosList"><p class="admin-empty-small">Cargando...</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CUPONES -->
+    <section class="admin-panel" id="admin-panel-cupones">
+      <div class="admin-panel-header">
+        <div><h2>Gestión de Cupones</h2><p class="panel-subtitle" id="cuponesCount">0 cupones</p></div>
+        <button class="admin-add-btn" onclick="openCouponModal()"><i class="fa-solid fa-plus"></i> Nuevo cupón</button>
+      </div>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead><tr><th>Código</th><th>Descuento</th><th>Usos</th><th>Expira</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <tbody id="cuponesTableBody"><tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text-light)">Cargando...</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- RESEÑAS -->
+    <section class="admin-panel" id="admin-panel-resenas">
+      <div class="admin-panel-header">
+        <div><h2>Moderación de Reseñas</h2></div>
+        <button class="admin-refresh-btn" onclick="loadResenas()"><i class="fa-solid fa-rotate-right"></i> Actualizar</button>
+      </div>
+      <div id="resenasList"><div class="admin-empty"><i class="fa-solid fa-star"></i><p>Cargando...</p></div></div>
+    </section>
+
+    <!-- DEVOLUCIONES -->
+    <section class="admin-panel" id="admin-panel-devoluciones">
+      <div class="admin-panel-header">
+        <div><h2>Devoluciones y Reembolsos</h2></div>
+        <button class="admin-refresh-btn" onclick="loadDevoluciones()"><i class="fa-solid fa-rotate-right"></i> Actualizar</button>
+      </div>
+      <div id="devolucionesList"><div class="admin-empty"><i class="fa-solid fa-rotate-left"></i><p>Cargando...</p></div></div>
+    </section>
+
+  </main>
+
+  <!-- EDIT PRICE MODAL -->
+  <div class="admin-modal-overlay" id="editModalOverlay" onclick="closeEditModal()"></div>
+  <div class="admin-modal" id="editModal">
+    <button class="admin-modal-close" onclick="closeEditModal()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <h3 id="editModalTitle">Editar precio</h3>
+    <div class="edit-field">
+      <label>Precio actual</label>
+      <input type="number" id="editPrice" placeholder="0" min="0" step="1" />
+    </div>
+    <div class="edit-field">
+      <label>Precio anterior (opcional)</label>
+      <input type="number" id="editOldPrice" placeholder="Dejar vacío para quitar descuento" min="0" step="1" />
+    </div>
+    <div class="edit-field">
+      <label>Stock</label>
+      <input type="number" id="editStock" placeholder="0" min="0" step="1" />
+    </div>
+    <button class="btn-admin-save" onclick="saveProductEdit()">
+      <i class="fa-solid fa-floppy-disk"></i> Guardar cambios
+    </button>
+  </div>
+
+  <!-- COUPON MODAL -->
+  <div class="admin-modal-overlay" id="couponModalOverlay" onclick="closeCouponModal()"></div>
+  <div class="admin-modal" id="couponModal">
+    <button class="admin-modal-close" onclick="closeCouponModal()"><i class="fa-solid fa-xmark"></i></button>
+    <h3>Nuevo Cupón</h3>
+    <div class="edit-field">
+      <label>Código <small>(ej: VERANO30)</small></label>
+      <input type="text" id="couponCode" placeholder="CODIGO" style="text-transform:uppercase" />
+    </div>
+    <div class="edit-field">
+      <label>Descuento (%)</label>
+      <input type="number" id="couponDiscount" placeholder="10" min="1" max="99" step="1" />
+    </div>
+    <div class="edit-field">
+      <label>Usos máximos <small>(vacío = ilimitado)</small></label>
+      <input type="number" id="couponUsos" placeholder="100" min="1" step="1" />
+    </div>
+    <div class="edit-field">
+      <label>Fecha de expiración <small>(opcional)</small></label>
+      <input type="date" id="couponExpira" />
+    </div>
+    <button class="btn-admin-save" onclick="saveCoupon()"><i class="fa-solid fa-floppy-disk"></i> Crear cupón</button>
+  </div>
+
+  <!-- TOAST -->
+  <div class="admin-toast" id="adminToast"></div>
+
+  <script src="admin.js"></script>
+</body>
+</html>

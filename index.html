@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShopNow - Tu Tienda Online</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#e8520a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="ShopNow" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="#" class="logo">Shop<span>Now</span></a>
+      <nav class="nav-links">
+        <a href="#inicio">Inicio</a>
+        <a href="#productos">Productos</a>
+        <a href="#ofertas">Ofertas</a>
+        <a href="#contacto">Contacto</a>
+      </nav>
+      <div class="nav-actions">
+        <div class="search-box">
+          <input type="text" placeholder="Buscar productos..." id="searchInput"
+            oninput="handleSearchInput(this.value)" autocomplete="off" />
+          <button onclick="searchProducts()"><i class="fa-solid fa-magnifying-glass"></i></button>
+          <div class="autocomplete-dropdown" id="autocompleteDropdown"></div>
+        </div>
+        <button class="cart-btn" onclick="toggleCart()">
+          <i class="fa-solid fa-cart-shopping"></i> Carrito <span class="cart-count" id="cartCount">0</span>
+        </button>
+        <button class="dark-toggle" id="darkToggle" onclick="toggleDarkMode()" title="Modo oscuro">
+          <i class="fa-solid fa-moon" id="darkIcon"></i>
+        </button>
+        <!-- User menu -->
+        <a href="login.html" class="nav-login-btn" id="navLoginBtn">
+          <i class="fa-solid fa-user"></i> Iniciar Sesión
+        </a>
+        <div class="nav-user" id="navUser" style="display:none">
+          <button class="nav-user-btn" onclick="toggleUserMenu()">
+            <span class="nav-avatar" id="navAvatar">U</span>
+            <span id="navUserName">Usuario</span>
+            <span class="points-badge" id="pointsBadge" style="display:none">⭐ 0</span>
+            <i class="fa-solid fa-chevron-down nav-chevron" id="navChevron"></i>
+          </button>
+          <div class="nav-user-dropdown" id="navUserDropdown">
+            <div class="nav-user-info">
+              <p class="nav-user-fullname" id="navFullName">—</p>
+              <p class="nav-user-email"   id="navUserEmail">—</p>
+            </div>
+            <div class="nav-dropdown-divider"></div>
+            <a href="profile.html" class="nav-dropdown-item">
+              <i class="fa-solid fa-user"></i> Mi Perfil
+            </a>
+            <a href="profile.html#pedidos" class="nav-dropdown-item">
+              <i class="fa-solid fa-bag-shopping"></i> Mis Pedidos
+            </a>
+            <a href="admin.html" class="nav-dropdown-item" style="color:#c49a00">
+              <i class="fa-solid fa-shield-halved" style="color:#c49a00"></i> Panel Admin
+            </a>
+            <div class="nav-dropdown-divider"></div>
+            <button class="nav-dropdown-item nav-logout" onclick="logout()">
+              <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" id="inicio">
+    <div class="hero-orb orb-1"></div>
+    <div class="hero-orb orb-2"></div>
+    <div class="hero-orb orb-3"></div>
+    <div class="hero-content hero-animate">
+      <span class="hero-badge">Nueva Colección 2026</span>
+      <h1>Descubre los mejores<br /><span>productos del momento</span></h1>
+      <p>Calidad premium, precios inmejorables. Envío gratis en compras mayores a $500.</p>
+      <div class="hero-btns">
+        <a href="#productos" class="btn-primary ripple">Ver Productos</a>
+        <a href="#ofertas" class="btn-secondary">Ver Ofertas</a>
+      </div>
+    </div>
+    <div class="hero-image hero-animate-right">
+      <div class="hero-card floating">
+        <div class="hero-icon"><i class="fa-solid fa-bag-shopping"></i></div>
+        <p>+5,000 productos</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <strong class="counter" data-target="5000">0</strong><span>Productos</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <strong class="counter" data-target="12000">0</strong><span>Clientes felices</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <strong class="counter" data-target="98">0</strong><span>% Satisfacción</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <strong class="counter" data-target="24">0</strong><span>h Soporte</span>
+    </div>
+  </div>
+
+  <!-- CATEGORIAS -->
+  <section class="categories reveal">
+    <div class="container">
+      <h2 class="section-title fancy-title">Categorías</h2>
+      <div class="categories-grid">
+        <div class="category-card" onclick="filterCategory('electronica')">
+          <span><i class="fa-solid fa-laptop"></i></span>
+          <p>Electrónica</p>
+        </div>
+        <div class="category-card" onclick="filterCategory('ropa')">
+          <span><i class="fa-solid fa-shirt"></i></span>
+          <p>Ropa</p>
+        </div>
+        <div class="category-card" onclick="filterCategory('calzado')">
+          <span><i class="fa-solid fa-shoe-prints"></i></span>
+          <p>Calzado</p>
+        </div>
+        <div class="category-card" onclick="filterCategory('hogar')">
+          <span><i class="fa-solid fa-house"></i></span>
+          <p>Hogar</p>
+        </div>
+        <div class="category-card" onclick="filterCategory('deportes')">
+          <span><i class="fa-solid fa-futbol"></i></span>
+          <p>Deportes</p>
+        </div>
+        <div class="category-card" onclick="filterCategory('todos')">
+          <span><i class="fa-solid fa-border-all"></i></span>
+          <p>Todos</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VISTOS RECIENTEMENTE -->
+  <section class="recent-section" id="recentSection" style="display:none">
+    <div class="container">
+      <h3 class="recent-title"><i class="fa-solid fa-clock-rotate-left"></i> Vistos recientemente</h3>
+      <div class="recent-grid" id="recentGrid"></div>
+    </div>
+  </section>
+
+  <!-- PRODUCTOS -->
+  <section class="products-section reveal" id="productos">
+    <div class="container">
+      <h2 class="section-title fancy-title">Productos Destacados</h2>
+
+      <!-- FILTROS -->
+      <div class="filter-bar">
+        <div class="filter-group">
+          <label><i class="fa-solid fa-arrow-up-wide-short"></i> Ordenar</label>
+          <select id="sortSelect" onchange="applyFilters()">
+            <option value="default">Relevancia</option>
+            <option value="price-asc">Precio: menor a mayor</option>
+            <option value="price-desc">Precio: mayor a menor</option>
+            <option value="rating">Mejor valorados</option>
+          </select>
+        </div>
+        <div class="filter-group filter-price">
+          <label><i class="fa-solid fa-tag"></i> Precio máx: <strong id="priceLabel">$35,000</strong></label>
+          <input type="range" id="priceRange" min="0" max="35000" value="35000" step="500"
+            oninput="updatePriceLabel(this.value)" onchange="applyFilters()" />
+        </div>
+        <div class="filter-group">
+          <label><i class="fa-solid fa-star"></i> Rating mínimo</label>
+          <div class="rating-btns">
+            <button class="rating-btn active" onclick="setRating(0,   this)">Todos</button>
+            <button class="rating-btn"        onclick="setRating(4.0, this)">4.0+</button>
+            <button class="rating-btn"        onclick="setRating(4.5, this)">4.5+</button>
+          </div>
+        </div>
+        <button class="filter-reset" onclick="resetFilters()">
+          <i class="fa-solid fa-rotate-left"></i> Limpiar
+        </button>
+      </div>
+
+      <div class="products-grid" id="productsGrid"></div>
+    </div>
+  </section>
+
+  <!-- BANNER OFERTA -->
+  <section class="offer-banner reveal" id="ofertas">
+    <div class="offer-content">
+      <h2>Oferta Especial del Día</h2>
+      <p>Hasta <strong>50% OFF</strong> en productos seleccionados</p>
+      <div class="countdown" id="countdown">
+        <div class="time-box"><span id="hours">00</span><small>Horas</small></div>
+        <div class="time-box"><span id="minutes">00</span><small>Minutos</small></div>
+        <div class="time-box"><span id="seconds">00</span><small>Segundos</small></div>
+      </div>
+      <a href="#productos" class="btn-primary">Aprovechar Oferta</a>
+    </div>
+  </section>
+
+  <!-- CONTACTO -->
+  <section class="contact-section reveal" id="contacto">
+    <div class="container">
+      <h2 class="section-title fancy-title">Contáctanos</h2>
+      <div class="contact-grid">
+        <div class="contact-info">
+          <div class="info-card"><span><i class="fa-solid fa-location-dot"></i></span><p>Puebla, México</p></div>
+          <div class="info-card"><span><i class="fa-solid fa-phone"></i></span><p>+52 222 123 4567</p></div>
+          <div class="info-card"><span><i class="fa-solid fa-envelope"></i></span><p>contacto@shopnow.mx</p></div>
+          <div class="info-card"><span><i class="fa-solid fa-clock"></i></span><p>Lun–Vie 9am–6pm</p></div>
+        </div>
+        <form class="contact-form" onsubmit="submitForm(event)">
+          <input type="text" placeholder="Tu nombre" required />
+          <input type="email" placeholder="Tu correo" required />
+          <textarea placeholder="Tu mensaje" rows="4" required></textarea>
+          <button type="submit" class="btn-primary">Enviar Mensaje</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <a href="#" class="logo">Shop<span>Now</span></a>
+        <p>Tu tienda de confianza con los mejores productos y precios del mercado.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Navegación</h4>
+        <a href="#inicio">Inicio</a>
+        <a href="#productos">Productos</a>
+        <a href="#ofertas">Ofertas</a>
+        <a href="#contacto">Contacto</a>
+      </div>
+      <div class="footer-links">
+        <h4>Soporte</h4>
+        <a href="#">Política de Devoluciones</a>
+        <a href="#">Seguimiento de Pedido</a>
+        <a href="#">Preguntas Frecuentes</a>
+        <a href="#">Términos y Condiciones</a>
+      </div>
+      <div class="footer-social">
+        <h4>Síguenos</h4>
+        <div class="social-icons">
+          <a href="#"><i class="fa-brands fa-facebook-f"></i> Facebook</a>
+          <a href="#"><i class="fa-brands fa-instagram"></i> Instagram</a>
+          <a href="#"><i class="fa-brands fa-x-twitter"></i> Twitter</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 ShopNow. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- CARRITO LATERAL -->
+  <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+  <div class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header">
+      <h3>Mi Carrito</h3>
+      <button onclick="toggleCart()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="cart-items" id="cartItems">
+      <div class="empty-cart">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <p>Tu carrito está vacío</p>
+      </div>
+    </div>
+    <div class="cart-footer" id="cartFooter" style="display:none">
+      <div class="cart-total">
+        <span>Total:</span>
+        <strong id="cartTotal">$0.00</strong>
+      </div>
+      <button class="btn-primary" onclick="checkout()">Finalizar Compra</button>
+    </div>
+  </div>
+
+  <!-- MODAL PRODUCTO -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModal()"></div>
+  <div class="product-modal" id="productModal">
+    <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+    <div class="modal-content" id="modalContent"></div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <!-- COMPARE BAR -->
+  <div class="compare-bar" id="compareBar" style="display:none">
+    <div class="compare-bar-inner">
+      <div class="compare-bar-products" id="compareBarProducts"></div>
+      <div class="compare-bar-actions">
+        <button class="btn-compare-view" onclick="openComparison()">
+          <i class="fa-solid fa-table-columns"></i> Comparar (<span id="compareCount">0</span>)
+        </button>
+        <button class="btn-compare-clear" onclick="clearComparison()">
+          <i class="fa-solid fa-xmark"></i> Limpiar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPARE MODAL -->
+  <div class="compare-modal-overlay" id="compareOverlay" onclick="closeComparison()"></div>
+  <div class="compare-modal" id="compareModal">
+    <button class="compare-close-btn" onclick="closeComparison()"><i class="fa-solid fa-xmark"></i></button>
+    <h3 class="compare-title"><i class="fa-solid fa-table-columns"></i> Comparar productos</h3>
+    <div class="compare-table-wrap" id="compareTableWrap"></div>
+  </div>
+
+  <script src="auth.js"></script>
+  <script src="app.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js").catch(() => {});
+    }
+  </script>
+</body>
+</html>

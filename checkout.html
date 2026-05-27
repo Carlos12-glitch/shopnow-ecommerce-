@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout — ShopNow</title>
+  <link rel="stylesheet" href="checkout.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="logo">Shop<span>Now</span></a>
+      <div class="secure-badge"><i class="fa-solid fa-lock"></i> Pago 100% seguro</div>
+    </div>
+  </header>
+
+  <!-- STEPS -->
+  <div class="steps-bar">
+    <div class="step done"><span>1</span> Carrito</div>
+    <div class="step-line"></div>
+    <div class="step active"><span>2</span> Pago</div>
+    <div class="step-line"></div>
+    <div class="step"><span>3</span> Confirmación</div>
+  </div>
+
+  <!-- MAIN -->
+  <main class="checkout-main" id="checkoutMain">
+
+    <!-- LEFT: PAYMENT FORM -->
+    <section class="payment-section">
+      <h2>Método de pago</h2>
+
+      <!-- MÉTODOS GUARDADOS (se muestra dinámicamente) -->
+      <div class="saved-methods-panel" id="savedMethodsPanel" style="display:none">
+        <div class="saved-methods-header">
+          <i class="fa-solid fa-star"></i>
+          <span>Métodos guardados</span>
+        </div>
+        <div class="saved-methods-list" id="savedMethodsList"></div>
+        <button class="add-new-btn" onclick="showNewMethodForm()">
+          <i class="fa-solid fa-plus"></i> Agregar nuevo método
+        </button>
+      </div>
+
+      <!-- TABS -->
+      <div class="payment-tabs">
+        <button class="tab-btn active" onclick="selectTab('card')">
+          <i class="fa-solid fa-credit-card"></i> Tarjeta
+        </button>
+        <button class="tab-btn" onclick="selectTab('paypal')">
+          <i class="fa-brands fa-paypal"></i> PayPal
+        </button>
+        <button class="tab-btn" onclick="selectTab('oxxo')">
+          <i class="fa-solid fa-store"></i> OXXO
+        </button>
+        <button class="tab-btn" onclick="selectTab('spei')">
+          <i class="fa-solid fa-building-columns"></i> SPEI
+        </button>
+        <button class="tab-btn" onclick="selectTab('mercadopago')">
+          <i class="fa-solid fa-wallet"></i> Mercado Pago
+        </button>
+      </div>
+
+      <!-- ===== TARJETA ===== -->
+      <div class="tab-panel active" id="tab-card">
+        <div class="card-preview" id="cardPreview">
+          <div class="card-front" id="cardFront">
+            <div class="card-top">
+              <span class="chip"><i class="fa-solid fa-microchip"></i></span>
+              <img class="card-network" id="cardNetworkImg" src="" alt="" />
+            </div>
+            <p class="card-number-display" id="cardNumberDisplay">•••• •••• •••• ••••</p>
+            <div class="card-bottom">
+              <div>
+                <small>Titular</small>
+                <p id="cardNameDisplay">NOMBRE APELLIDO</p>
+              </div>
+              <div>
+                <small>Vence</small>
+                <p id="cardExpDisplay">MM/AA</p>
+              </div>
+            </div>
+          </div>
+          <div class="card-back" id="cardBack">
+            <div class="card-strip"></div>
+            <div class="card-cvv-row">
+              <p>CVV</p>
+              <div class="cvv-box" id="cardCvvDisplay">•••</div>
+            </div>
+          </div>
+        </div>
+
+        <form class="card-form" onsubmit="processPayment(event)">
+          <div class="form-group">
+            <label>Número de tarjeta</label>
+            <div class="input-icon">
+              <i class="fa-solid fa-credit-card"></i>
+              <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456"
+                maxlength="19" oninput="formatCardNumber(this)" autocomplete="cc-number" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Nombre del titular</label>
+            <div class="input-icon">
+              <i class="fa-solid fa-user"></i>
+              <input type="text" id="cardName" placeholder="Como aparece en la tarjeta"
+                oninput="updateCardPreview()" autocomplete="cc-name" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Fecha de vencimiento</label>
+              <div class="input-icon">
+                <i class="fa-solid fa-calendar"></i>
+                <input type="text" id="cardExp" placeholder="MM/AA"
+                  maxlength="5" oninput="formatExpiry(this)" autocomplete="cc-exp" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>CVV</label>
+              <div class="input-icon">
+                <i class="fa-solid fa-lock"></i>
+                <input type="text" id="cardCvv" placeholder="•••"
+                  maxlength="4" oninput="updateCvvPreview(this)"
+                  onfocus="flipCard(true)" onblur="flipCard(false)"
+                  autocomplete="cc-csc" required />
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Alias (opcional)</label>
+            <div class="input-icon">
+              <i class="fa-solid fa-tag"></i>
+              <input type="text" id="cardAlias" placeholder="Ej: Mi tarjeta principal" />
+            </div>
+          </div>
+          <div class="save-method-row">
+            <label class="save-checkbox">
+              <input type="checkbox" id="saveCard" checked />
+              <span class="checkmark"></span>
+              Guardar tarjeta para futuras compras
+            </label>
+            <span class="no-cvv-note"><i class="fa-solid fa-shield-halved"></i> El CVV nunca se almacena</span>
+          </div>
+          <div class="card-brands">
+            <img src="https://raw.githubusercontent.com/gilbarbara/logos/main/logos/visa.svg" alt="Visa" title="Visa" />
+            <img src="https://raw.githubusercontent.com/gilbarbara/logos/main/logos/mastercard.svg" alt="Mastercard" title="Mastercard" />
+            <img src="https://raw.githubusercontent.com/gilbarbara/logos/main/logos/amex.svg" alt="Amex" title="American Express" />
+          </div>
+          <button type="submit" class="btn-pay">
+            <i class="fa-solid fa-lock"></i> Pagar <span id="payAmount">$0</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- ===== PAYPAL ===== -->
+      <div class="tab-panel" id="tab-paypal">
+        <div class="alt-method-box">
+          <div class="alt-method-logo paypal-logo">
+            <i class="fa-brands fa-paypal"></i> PayPal
+          </div>
+          <p>Serás redirigido a PayPal para completar tu pago de forma segura.</p>
+          <ul class="method-features">
+            <li><i class="fa-solid fa-check"></i> Sin compartir datos bancarios</li>
+            <li><i class="fa-solid fa-check"></i> Protección al comprador</li>
+            <li><i class="fa-solid fa-check"></i> Pago en segundos</li>
+          </ul>
+          <div class="form-group">
+            <label>Correo de PayPal</label>
+            <div class="input-icon">
+              <i class="fa-solid fa-envelope"></i>
+              <input type="email" id="paypalEmail" placeholder="tu@paypal.com" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Alias (opcional)</label>
+            <div class="input-icon">
+              <i class="fa-solid fa-tag"></i>
+              <input type="text" id="paypalAlias" placeholder="Ej: PayPal personal" />
+            </div>
+          </div>
+          <div class="save-method-row">
+            <label class="save-checkbox">
+              <input type="checkbox" id="savePaypal" checked />
+              <span class="checkmark"></span>
+              Guardar cuenta PayPal
+            </label>
+          </div>
+          <button class="btn-pay paypal-btn" onclick="processPayment(event)">
+            <i class="fa-brands fa-paypal"></i> Pagar con PayPal <span id="payAmountPaypal">$0</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ===== OXXO ===== -->
+      <div class="tab-panel" id="tab-oxxo">
+        <div class="alt-method-box">
+          <div class="alt-method-logo oxxo-logo">
+            <i class="fa-solid fa-store"></i> OXXO Pay
+          </div>
+          <p>Genera una referencia y paga en efectivo en cualquier tienda OXXO. Tu pedido se confirmará en máximo 2 horas.</p>
+          <ul class="method-features">
+            <li><i class="fa-solid fa-check"></i> Sin tarjeta ni cuenta bancaria</li>
+            <li><i class="fa-solid fa-check"></i> Más de 19,000 tiendas OXXO</li>
+            <li><i class="fa-solid fa-check"></i> Referencia válida por 24 horas</li>
+          </ul>
+          <div class="form-group">
+            <label>Tu correo electrónico (para recibir la referencia)</label>
+            <div class="input-icon">
+              <i class="fa-solid fa-envelope"></i>
+              <input type="email" id="oxxoEmail" placeholder="correo@ejemplo.com" required />
+            </div>
+          </div>
+          <div class="save-method-row">
+            <label class="save-checkbox">
+              <input type="checkbox" id="saveOxxo" checked />
+              <span class="checkmark"></span>
+              Recordar mi correo para OXXO
+            </label>
+          </div>
+          <button class="btn-pay oxxo-btn" onclick="processPayment(event)">
+            <i class="fa-solid fa-barcode"></i> Generar referencia OXXO
+          </button>
+        </div>
+      </div>
+
+      <!-- ===== SPEI ===== -->
+      <div class="tab-panel" id="tab-spei">
+        <div class="alt-method-box">
+          <div class="alt-method-logo spei-logo">
+            <i class="fa-solid fa-building-columns"></i> SPEI / Transferencia
+          </div>
+          <p>Realiza una transferencia bancaria interbancaria. Tu pedido se procesará al confirmar el pago.</p>
+          <div class="bank-info">
+            <div class="bank-row">
+              <span>Banco</span>
+              <strong>BBVA México</strong>
+            </div>
+            <div class="bank-row">
+              <span>Beneficiario</span>
+              <strong>ShopNow S.A. de C.V.</strong>
+            </div>
+            <div class="bank-row">
+              <span>CLABE</span>
+              <strong class="clabe">012 180 00123456789 0</strong>
+            </div>
+            <div class="bank-row">
+              <span>Concepto</span>
+              <strong id="speiConcepto">SHOPNOW-ORDEN</strong>
+            </div>
+            <div class="bank-row total-row">
+              <span>Monto exacto</span>
+              <strong id="speiMonto" class="spei-total">$0.00</strong>
+            </div>
+          </div>
+          <ul class="method-features">
+            <li><i class="fa-solid fa-check"></i> Acreditación en minutos</li>
+            <li><i class="fa-solid fa-check"></i> Sin comisiones adicionales</li>
+          </ul>
+          <button class="btn-pay spei-btn" onclick="processPayment(event)">
+            <i class="fa-solid fa-paper-plane"></i> Ya realicé la transferencia
+          </button>
+        </div>
+      </div>
+
+      <!-- ===== MERCADO PAGO ===== -->
+      <div class="tab-panel" id="tab-mercadopago">
+        <div class="alt-method-box">
+          <div class="alt-method-logo mp-logo">
+            <i class="fa-solid fa-wallet"></i> Mercado Pago
+          </div>
+          <p>Paga con tu cuenta de Mercado Pago, tarjeta o en efectivo. El método de pago más popular de México y Latinoamérica.</p>
+          <ul class="method-features">
+            <li><i class="fa-solid fa-check"></i> Acepta todas las tarjetas</li>
+            <li><i class="fa-solid fa-check"></i> Pago en hasta 12 MSI</li>
+            <li><i class="fa-solid fa-check"></i> Protección Mercado Pago</li>
+            <li><i class="fa-solid fa-check"></i> Pago en OXXO, 7-Eleven y más</li>
+          </ul>
+          <div class="form-group">
+            <label>Correo de Mercado Pago</label>
+            <div class="input-icon">
+              <i class="fa-solid fa-envelope"></i>
+              <input type="email" id="mpEmail" placeholder="tu@mercadopago.com" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Alias (opcional)</label>
+            <div class="input-icon">
+              <i class="fa-solid fa-tag"></i>
+              <input type="text" id="mpAlias" placeholder="Ej: Cuenta MercadoPago" />
+            </div>
+          </div>
+          <div class="save-method-row">
+            <label class="save-checkbox">
+              <input type="checkbox" id="saveMp" checked />
+              <span class="checkmark"></span>
+              Guardar cuenta Mercado Pago
+            </label>
+          </div>
+          <button class="btn-pay mp-btn" onclick="processPayment(event)">
+            <i class="fa-solid fa-wallet"></i> Pagar con Mercado Pago <span id="payAmountMp">$0</span>
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- RIGHT: ORDER SUMMARY -->
+    <aside class="order-summary">
+      <h2>Resumen del pedido</h2>
+      <div class="summary-items" id="summaryItems"></div>
+
+      <!-- ENVÍO -->
+      <div class="shipping-calc-box">
+        <p class="shipping-title"><i class="fa-solid fa-truck"></i> Calcular envío</p>
+        <div class="shipping-input-row">
+          <input type="text" id="cpInput" placeholder="Código Postal (ej: 06600)" maxlength="5" class="shipping-cp-input" />
+          <button class="btn-calc-shipping" onclick="calculateShipping()">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+        </div>
+        <div id="shippingResult" style="display:none" class="shipping-result">
+          <i class="fa-solid fa-truck"></i>
+          <div>
+            <p class="shipping-cost-label" id="shippingCostLabel">Envío gratis</p>
+            <p class="shipping-days" id="shippingDaysLabel">Entrega en 1-2 días hábiles</p>
+          </div>
+          <span class="shipping-cost-badge" id="shippingCostBadge">$0</span>
+        </div>
+      </div>
+
+      <!-- COUPON -->
+      <div class="coupon-box">
+        <div class="coupon-input-row">
+          <input type="text" id="couponInput" placeholder="Código de descuento"
+            oninput="this.value = this.value.toUpperCase()" />
+          <button onclick="applyCoupon()"><i class="fa-solid fa-tag"></i> Aplicar</button>
+        </div>
+        <p class="coupon-msg" id="couponMsg"></p>
+      </div>
+
+      <!-- POINTS REDEMPTION -->
+      <div class="points-redeem-row" id="pointsRedeemRow" style="display:none">
+        <label class="points-redeem-label">
+          <input type="checkbox" id="pointsCheck" onchange="togglePoints(this.checked)" />
+          <span class="points-checkmark"></span>
+          <i class="fa-solid fa-star points-star"></i>
+          <span id="userPointsLabel">0 puntos</span>
+          <span class="points-val">−$50 descuento</span>
+        </label>
+      </div>
+
+      <div class="summary-totals">
+        <div class="summary-row"><span>Subtotal</span><span id="summarySubtotal">$0</span></div>
+        <div class="summary-row" id="shippingRow"><span>Envío</span><span class="free-ship" id="summaryShipping"><i class="fa-solid fa-truck"></i> Gratis</span></div>
+        <div class="summary-row summary-discount" id="discountRow" style="display:none">
+          <span>Descuento (<span id="discountLabel">—</span>)</span>
+          <span id="summaryDiscount" style="color:#43a047;font-weight:700">-$0</span>
+        </div>
+        <div class="summary-row summary-discount" id="pointsDiscountRow" style="display:none">
+          <span>Descuento puntos</span>
+          <span style="color:#43a047;font-weight:700">-$50</span>
+        </div>
+        <div class="summary-row summary-tax"><span>IVA (16%)</span><span id="summaryTax">$0</span></div>
+        <div class="summary-row summary-total"><span>Total</span><span id="summaryTotal">$0</span></div>
+      </div>
+      <div class="summary-secure">
+        <i class="fa-solid fa-shield-halved"></i>
+        <p>Tus datos están protegidos con encriptación SSL de 256 bits.</p>
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- CONFIRMATION SCREEN -->
+  <div class="confirmation-overlay" id="confirmationOverlay">
+    <div class="confirmation-box">
+      <div class="confirm-icon"><i class="fa-solid fa-circle-check"></i></div>
+      <h2>¡Pago exitoso!</h2>
+      <p id="confirmMsg">Tu pedido ha sido procesado correctamente.</p>
+      <div class="confirm-order-id">Orden <strong id="orderId"></strong></div>
+      <p class="confirm-sub">Recibirás un correo de confirmación en breve.</p>
+      <p class="confirm-points" id="confirmPoints" style="display:none"></p>
+      <a href="index.html" class="btn-back">
+        <i class="fa-solid fa-arrow-left"></i> Volver a la tienda
+      </a>
+    </div>
+  </div>
+
+  <script src="checkout.js"></script>
+</body>
+</html>
