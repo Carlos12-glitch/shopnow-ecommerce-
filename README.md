@@ -1,29 +1,29 @@
-# 🛒 ShopNow — E-Commerce
+#ShopNow — E-Commerce
 
 Tienda en línea full-stack construida con **Node.js + Express + MySQL** en el backend y **HTML/CSS/JavaScript vanilla** en el frontend. Incluye panel de administrador, sistema de usuarios, cupones, devoluciones, reseñas y soporte PWA.
 
 ---
 
-## ✨ Características
+##  Características
 
-- 🛍️ Catálogo de productos con filtros por categoría, precio y rating
-- 🔍 Búsqueda con autocompletado en tiempo real
-- 🛒 Carrito de compras persistente
-- ❤️ Lista de deseos y comparador de productos
-- 👤 Registro, login y perfil de usuario con JWT
-- 📦 Checkout completo con múltiples métodos de pago (Tarjeta, PayPal, OXXO, SPEI, Mercado Pago)
-- 🎟️ Sistema de cupones de descuento
-- ⭐ Sistema de puntos y reseñas
-- 🔄 Solicitudes de devolución
-- 📧 Notificaciones por correo (confirmación de pedido, recuperación de contraseña)
-- 🚚 Calculadora de costos de envío por CP
-- 🌙 Modo oscuro
-- 📱 PWA (Progressive Web App) instalable
-- 🔐 Panel de administrador protegido con PIN del servidor
+-  Catálogo de productos con filtros por categoría, precio y rating
+-  Búsqueda con autocompletado en tiempo real
+-  Carrito de compras persistente
+-  Lista de deseos y comparador de productos
+-  Registro, login y perfil de usuario con JWT
+-  Checkout completo con múltiples métodos de pago (Tarjeta, PayPal, OXXO, SPEI, Mercado Pago)
+-  Sistema de cupones de descuento
+-  Sistema de puntos y reseñas
+-  Solicitudes de devolución
+-  Notificaciones por correo (confirmación de pedido, recuperación de contraseña)
+-  Calculadora de costos de envío por CP
+-  Modo oscuro
+-  PWA (Progressive Web App) instalable
+-  Panel de administrador protegido con PIN del servidor
 
 ---
 
-## 🛠️ Tecnologías
+##  Tecnologías
 
 | Área | Tecnología |
 |------|-----------|
@@ -39,7 +39,7 @@ Tienda en línea full-stack construida con **Node.js + Express + MySQL** en el b
 
 ---
 
-## 🚀 Instalación
+##  Instalación
 
 ### Requisitos previos
 - Node.js 18+
@@ -86,7 +86,7 @@ Abre tu navegador en → **http://localhost:3000**
 
 ---
 
-## 📁 Estructura del proyecto
+## Estructura del proyecto
 
 ```
 shopnow-ecommerce/
@@ -118,7 +118,7 @@ shopnow-ecommerce/
 
 ---
 
-## 🔌 API REST
+##  API REST
 
 | Método | Endpoint | Descripción |
 |--------|----------|-------------|
@@ -152,7 +152,7 @@ shopnow-ecommerce/
 
 ---
 
-## 🔐 Panel de Administrador
+##  Panel de Administrador
 
 Accede en → **http://localhost:3000/admin.html**
 
@@ -162,7 +162,7 @@ El PIN **nunca** aparece en el código fuente — se valida del lado del servido
 
 ---
 
-## 📧 Configuración de Email (opcional)
+##  Configuración de Email (opcional)
 
 Para activar los correos de confirmación de pedido y recuperación de contraseña:
 
@@ -173,7 +173,7 @@ Para activar los correos de confirmación de pedido y recuperación de contrase�
 
 ---
 
-## 🎟️ Cupones incluidos
+## Cupones incluidos
 
 | Código | Descuento |
 |--------|-----------|
@@ -184,6 +184,6 @@ Para activar los correos de confirmación de pedido y recuperación de contrase�
 
 ---
 
-## 📄 Licencia
+## Licencia
 
 MIT © 2026
